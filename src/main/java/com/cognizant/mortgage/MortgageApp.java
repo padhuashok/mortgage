@@ -20,4 +20,21 @@ public class MortgageApp {
                 }
             return customer.getCustomerQualification();
            }
+
+    public String checkLoanQualification(Customer customer,Lender lender) {
+        loanStatus = "rejected";
+        if(checkCustomerQualification(customer).equals("qualified"))
+        {
+            if(lender.getAvailableFunds()>=customer.getCustomerLoanAmount())
+            {
+                loanStatus="approved";
+            }
+            else
+            {
+                loanStatus="onhold";
+            }
+
+        }
+        return loanStatus;
+    }
 }

@@ -38,7 +38,7 @@ public class MortgageAppTest {
     }
 
     @Test
-    void testCheckLoanQualification(){
+    void testCheckCustomerQualification(){
         //
         //setup
         Customer customer1 = new Customer();
@@ -74,5 +74,61 @@ public class MortgageAppTest {
         expected ="partially qualified";
         actual = mortgageapp1.checkCustomerQualification(customer3);
         assertEquals(expected,actual);
+    }
+    @Test
+    void testCheckLoanQualification()
+    {
+        //setup
+        Customer customer4 = new Customer();
+        MortgageApp mortgageapp= new MortgageApp();
+        Lender lender1 = new Lender();
+
+        lender1.setAvailableFunds(500000);
+        customer4.setCustomerDti(36);
+        customer4.setCustomerCreditScore(700);
+        customer4.setCustomerSavings(200000);
+        customer4.setCustomerLoanAmount(500000);
+        //execute
+        String expected ="approved";
+        String actual = mortgageapp.checkLoanQualification(customer4,lender1);
+        //assert
+        assertEquals(expected,actual);
+        //completed approved case
+        //for on hold case
+        //setup
+        Customer customer5 = new Customer();
+        MortgageApp mortgageapp1= new MortgageApp();
+        Lender lender2 = new Lender();
+
+        lender2.setAvailableFunds(500000);
+        customer5.setCustomerDti(36);
+        customer5.setCustomerCreditScore(700);
+        customer5.setCustomerSavings(200000);
+        customer5.setCustomerLoanAmount(600000);
+        //execute
+        expected ="onhold";
+        actual = mortgageapp.checkLoanQualification(customer5,lender2);
+        //assert
+        assertEquals(expected,actual);
+        // completed onhold case
+
+        //for on rejected case
+        //setup
+        Customer customer6 = new Customer();
+        MortgageApp mortgageapp3= new MortgageApp();
+        Lender lender3 = new Lender();
+
+        lender3.setAvailableFunds(500000);
+        customer6.setCustomerDti(36);
+        customer6.setCustomerCreditScore(700);
+        customer6.setCustomerSavings(100000);
+        customer6.setCustomerLoanAmount(600000);
+        //execute
+        expected ="rejected";
+        actual = mortgageapp.checkLoanQualification(customer6,lender3);
+        //assert
+        assertEquals(expected,actual);
+        // completed onhold case
+
     }
 }
