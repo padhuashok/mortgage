@@ -131,4 +131,25 @@ public class MortgageAppTest {
         // completed onhold case
 
     }
+
+    @Test
+    void testUpdateApplicationandFundStatus(){
+        //test for pending,available funds
+        //setup
+        Customer customer7 = new Customer();
+        customer7.setCustomerLoanAmount(200000);
+        customer7.setCustomerLoanStatus("approved");
+
+        Lender lender4 = new Lender();
+        lender4.setAvailableFunds(500000);
+        lender4.setPendingFunds(100000);
+
+        MortgageApp mortgageapp4= new MortgageApp();
+        //execution
+        double expected = 300000;
+        mortgageapp4.updateApplicationandFundStatus(customer7,lender4);
+        double actual = lender4.getAvailableFunds();
+        //
+        assertEquals(expected,actual);
+    }
 }

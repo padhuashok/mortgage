@@ -24,4 +24,5 @@ public class Lender {
         this.availableFunds += depositAmt;
     }
 
+
 }

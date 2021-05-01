@@ -27,14 +27,27 @@ public class MortgageApp {
         {
             if(lender.getAvailableFunds()>=customer.getCustomerLoanAmount())
             {
-                loanStatus="approved";
+                //loanStatus="approved";
+                customer.setCustomerLoanStatus("approved");
             }
             else
             {
                 loanStatus="onhold";
+                customer.setCustomerLoanStatus("onhold");
             }
 
         }
-        return loanStatus;
+        return customer.getCustomerLoanStatus();
+    }
+    public void updateApplicationandFundStatus(Customer customer, Lender lender)
+    {
+
+        if(checkLoanQualification(customer,lender).equals("approved"))
+        {
+            double pendingfund = customer.getCustomerLoanAmount();
+            lender.setPendingFunds(lender.getPendingFunds()+pendingfund);
+            lender.setAvailableFunds(lender.getAvailableFunds()-pendingfund);
+
+        }
     }
 }

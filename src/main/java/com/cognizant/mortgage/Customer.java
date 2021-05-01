@@ -8,6 +8,7 @@ public class Customer {
     private double customerSavings;
     private String customerQualification;
     private double customerLoanAmount;
+    private String customerLoanStatus;
 
     public int getCustomerNumber() {
         return customerNumber;
@@ -63,5 +64,13 @@ public class Customer {
 
     public void setCustomerLoanAmount(double customerLoanAmount) {
         this.customerLoanAmount = customerLoanAmount;
+    }
+
+    public String getCustomerLoanStatus() {
+        return customerLoanStatus;
+    }
+
+    public void setCustomerLoanStatus(String customerLoanStatus) {
+        this.customerLoanStatus = customerLoanStatus;
     }
 }
