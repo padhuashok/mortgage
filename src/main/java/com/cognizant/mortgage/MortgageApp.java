@@ -1,8 +1,17 @@
 package com.cognizant.mortgage;
 
+import java.time.LocalDate;
+import java.util.*;
+
 public class MortgageApp {
     public double approvedLoanAmount;
     public String loanStatus;
+    public LocalDate loanApprovalDate;
+    private int loanId;
+    private int customerId;
+
+    public HashMap<String,List<MortgageApp>> listOfLoans = new HashMap<>();
+
     public String checkCustomerQualification(Customer customer){
         if (customer.getCustomerDti()>36
                 ||
@@ -27,17 +36,17 @@ public class MortgageApp {
         {
             if(lender.getAvailableFunds()>=customer.getCustomerLoanAmount())
             {
-                //loanStatus="approved";
+                loanStatus="approved";
                 customer.setCustomerLoanStatus("approved");
             }
             else
             {
                 loanStatus="onhold";
-                customer.setCustomerLoanStatus("onhold");
+                customer.setCustomerLoanStatus("approved");
             }
 
         }
-        return customer.getCustomerLoanStatus();
+        return loanStatus;
     }
     public void updateApplicationAndFundStatus(Customer customer, Lender lender)
     {
@@ -56,6 +65,22 @@ public class MortgageApp {
             lender.setPendingFunds(lender.getPendingFunds()- customer.getCustomerLoanAmount());
             loanStatus = "rejected";
         }
+    }
+    public void updateStatusToExpired(Customer customer,Lender lender){
+        LocalDate expiredDate = LocalDate.now().minusDays(3);
+        System.out.println("approval date - " +loanApprovalDate.toString());
+        System.out.println("calculated date - " +expiredDate.toString());
+        if(!expiredDate.equals(loanApprovalDate)){
+            lender.setPendingFunds(lender.getPendingFunds()- customer.getCustomerLoanAmount());
+            lender.setAvailableFunds(lender.getAvailableFunds() + customer.getCustomerLoanAmount());
+            loanStatus = "expired";
+        }
+    }
+    public List<MortgageApp> getLoanByStatus(String status,HashMap<String,List<MortgageApp>> myLoanMap){
+        if(myLoanMap.containsKey(status)){
+            return myLoanMap.get(status);
+        }
+        return new ArrayList<MortgageApp>();
     }
 
         }

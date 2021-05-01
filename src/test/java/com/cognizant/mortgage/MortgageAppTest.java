@@ -4,6 +4,11 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.time.LocalDate;
+import java.time.Month;
+import java.time.chrono.ChronoLocalDate;
+import java.util.*;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class MortgageAppTest {
@@ -146,7 +151,7 @@ public class MortgageAppTest {
 
         MortgageApp mortgageapp4= new MortgageApp();
         //execution
-        double expected = 300000;
+        double expected = 700000;
         mortgageapp4.updateApplicationAndFundStatus(customer7,lender4);
         double actual = lender4.getAvailableFunds();
         //
@@ -161,7 +166,7 @@ public class MortgageAppTest {
         customer7.setCustomerLoanStatus("accepted");
 
         double expectedPendingFund = 100000;
-        double expectedAvailableFund = 250000;
+        double expectedAvailableFund = 450000;
         mortgageapp4.updateApplicationAndFundStatus(customer7,lender4);
         assertEquals(expectedPendingFund,lender4.getPendingFunds());
         assertEquals(expectedAvailableFund,lender4.getAvailableFunds());
@@ -180,5 +185,65 @@ public class MortgageAppTest {
         assertEquals(expectedPendingFund,lender4.getPendingFunds());
         assertEquals(expectedAvailableFund,lender4.getAvailableFunds());
 
+    }
+
+    @Test
+    void testExpiredApplicationStatus(){
+        //set up
+        MortgageApp mortgageapp4= new MortgageApp();
+        mortgageapp4.loanApprovalDate = LocalDate.of(2021, Month.APRIL,24);
+        Customer customer7 = new Customer();
+        customer7.setCustomerLoanAmount(200000);
+        customer7.setCustomerLoanStatus("approved");
+
+        Lender lender4 = new Lender();
+        lender4.setAvailableFunds(500000);
+        lender4.setPendingFunds(300000);
+
+        //given the loan status is approved ;when the loan approved date is 3 days ago, then status goes to expired
+        mortgageapp4.updateStatusToExpired(customer7,lender4);
+        assertEquals("expired",mortgageapp4.loanStatus);
+        assertEquals(100000,lender4.pendingFunds);
+        assertEquals(700000,lender4.availableFunds);
+    }
+
+    //@Test
+    void testGetLoansByStatus(){
+        List<MortgageApp> myLoans = new ArrayList<MortgageApp>();
+        MortgageApp m1 = new MortgageApp();
+        m1.loanStatus = "approved";
+        m1.loanApprovalDate = LocalDate.now();
+        m1.approvedLoanAmount = 300000;
+        MortgageApp m2 = new MortgageApp();
+        m2.loanStatus = "rejected";
+        m2.loanApprovalDate = LocalDate.now();
+        m2.approvedLoanAmount = 300000;
+        MortgageApp m3 = new MortgageApp();
+        m3.loanStatus = "expired";
+        m3.loanApprovalDate = LocalDate.now();
+        m3.approvedLoanAmount = 300000;
+        MortgageApp m4 = new MortgageApp();
+        m4.loanStatus = "accepted";
+        m4.loanApprovalDate = LocalDate.now();
+        m4.approvedLoanAmount = 300000;
+        MortgageApp m5 = new MortgageApp();
+        m5.loanStatus = "denied";
+        m5.loanApprovalDate = LocalDate.now();
+        m5.approvedLoanAmount = 300000;
+        myLoans.add(m1);
+        myLoans.add(m2);
+        myLoans.add(m3);
+        myLoans.add(m4);
+        myLoans.add(m5);
+
+        HashMap<String,List<MortgageApp>> listMap = new HashMap<>();
+        for (MortgageApp myLoansList: myLoans
+             ) {
+            if(listMap.containsKey(myLoansList.loanStatus)){
+                listMap.get(myLoansList.loanStatus).add(myLoansList);
+            }else
+                listMap.put(myLoansList.loanStatus, myLoans);
+             }
+        //assertEquals();
     }
 }
