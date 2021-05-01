@@ -147,9 +147,38 @@ public class MortgageAppTest {
         MortgageApp mortgageapp4= new MortgageApp();
         //execution
         double expected = 300000;
-        mortgageapp4.updateApplicationandFundStatus(customer7,lender4);
+        mortgageapp4.updateApplicationAndFundStatus(customer7,lender4);
         double actual = lender4.getAvailableFunds();
         //
         assertEquals(expected,actual);
+
+        //given a loan is approved , when customer accepts the offer, then update the pending and available funds
+        lender4 = new Lender();
+        lender4.setAvailableFunds(250000);
+        lender4.setPendingFunds(300000);
+        customer7 = new Customer();
+        customer7.setCustomerLoanAmount(200000);
+        customer7.setCustomerLoanStatus("accepted");
+
+        double expectedPendingFund = 100000;
+        double expectedAvailableFund = 250000;
+        mortgageapp4.updateApplicationAndFundStatus(customer7,lender4);
+        assertEquals(expectedPendingFund,lender4.getPendingFunds());
+        assertEquals(expectedAvailableFund,lender4.getAvailableFunds());
+
+        //given a loan is approved , when customer rejects the offer, then update the pending and available funds
+        lender4 = new Lender();
+        lender4.setAvailableFunds(250000);
+        lender4.setPendingFunds(300000);
+        customer7 = new Customer();
+        customer7.setCustomerLoanAmount(200000);
+        customer7.setCustomerLoanStatus("rejected");
+
+        expectedPendingFund = 100000;
+        expectedAvailableFund = 450000;
+        mortgageapp4.updateApplicationAndFundStatus(customer7,lender4);
+        assertEquals(expectedPendingFund,lender4.getPendingFunds());
+        assertEquals(expectedAvailableFund,lender4.getAvailableFunds());
+
     }
 }

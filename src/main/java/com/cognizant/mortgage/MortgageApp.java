@@ -39,7 +39,7 @@ public class MortgageApp {
         }
         return customer.getCustomerLoanStatus();
     }
-    public void updateApplicationandFundStatus(Customer customer, Lender lender)
+    public void updateApplicationAndFundStatus(Customer customer, Lender lender)
     {
 
         if(checkLoanQualification(customer,lender).equals("approved"))
@@ -48,6 +48,14 @@ public class MortgageApp {
             lender.setPendingFunds(lender.getPendingFunds()+pendingfund);
             lender.setAvailableFunds(lender.getAvailableFunds()-pendingfund);
 
+        } else if (checkLoanQualification(customer,lender).equals("accepted")){
+                lender.setPendingFunds(lender.getPendingFunds()-customer.getCustomerLoanAmount());
+                loanStatus = "accepted";
+        } else if(checkLoanQualification(customer,lender).equals("rejected")){
+            lender.setAvailableFunds(lender.getAvailableFunds() + customer.getCustomerLoanAmount());
+            lender.setPendingFunds(lender.getPendingFunds()- customer.getCustomerLoanAmount());
+            loanStatus = "rejected";
         }
     }
-}
+
+        }
